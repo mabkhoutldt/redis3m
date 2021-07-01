@@ -37,7 +37,7 @@ public:
      * @param id
      * @return Use {@link model.loaded()} to check if it's valid or not
      */
-    Model find_by_id(connection::ptr_t conn, const std::string& id)
+    Model find_by_id(connection::ptr_t conn, const std::string& id) const
     {
         reply r = conn->run(command("HGETALL")(model_key(id)));
         if (r.elements().size() > 0 )
@@ -62,7 +62,7 @@ public:
      * @param value
      * @return Use {@link model.loaded()} to check if it's valid or not
      */
-    Model find_by_unique_field(connection::ptr_t conn, const std::string& field, const std::string& value)
+    Model find_by_unique_field(connection::ptr_t conn, const std::string& field, const std::string& value) const
     {
         std::string id = conn->run(command("HGET")(unique_field_key(field))(value)).str();
         if (!id.empty())
@@ -81,7 +81,7 @@ public:
      * @param id Unique identifier
      * @return
      */
-    bool exists_by_id(connection::ptr_t conn, const std::string& id)
+    bool exists_by_id(connection::ptr_t conn, const std::string& id) const
     {
         return conn->run(command("SISMEMBER")(collection_key())(id)).integer() == 1;
     }
@@ -92,7 +92,7 @@ public:
      * @param model
      * @return unique identifier of the object, a new one on creation.
      */
-    std::string save(connection::ptr_t conn, const Model& model)
+    std::string save(connection::ptr_t conn, const Model& model) const
     {
         std::map<std::string, std::string> model_map;
         model_map["name"] = model.model_name();
@@ -154,7 +154,7 @@ public:
      * @param conn
      * @param model
      */
-    void remove(connection::ptr_t conn, const Model& model)
+    void remove(connection::ptr_t conn, const Model& model) const
     {
         std::map<std::string, std::string> model_map;
         model_map["name"] = model.model_name();
@@ -227,7 +227,7 @@ public:
      * all other functions.
      * @return
      */
-    inline std::string collection_key()
+    inline std::string collection_key() const
     {
         return Model::model_name() + ":all";
     }
@@ -239,7 +239,7 @@ public:
      * all other functions.
      * @return
      */
-    inline std::string collection_id_key()
+    inline std::string collection_id_key() const
     {
         return Model::model_name() + ":id";
     }
@@ -249,7 +249,7 @@ public:
      * @param id
      * @return
      */
-    inline std::string model_key(const std::string& id)
+    inline std::string model_key(const std::string& id) const
     {
         return Model::model_name() + ":" + id;
     }
@@ -260,17 +260,17 @@ public:
      * @param key
      * @return
      */
-    inline std::string tracked_key(const std::string& id, const std::string& key)
+    inline std::string tracked_key(const std::string& id, const std::string& key) const
     {
         return model_key(id) + ":" + key;
     }
 
-    inline std::string indexed_field_key(const std::string& field, const std::string& value)
+    inline std::string indexed_field_key(const std::string& field, const std::string& value) const
     {
         return Model::model_name() + ":indices:" + field + ":" + value;
     }
 
-    inline std::string unique_field_key(const std::string& field)
+    inline std::string unique_field_key(const std::string& field) const
     {
         return Model::model_name() + ":uniques:" + field;
     }
