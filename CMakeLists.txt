@@ -27,7 +27,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -std=c++11 -pipe -fPIC -Wall -Wpedantic ${NO_BO
 if(CMAKE_BUILD_TYPE STREQUAL Release)
     set(datadir ${CMAKE_INSTALL_PREFIX}/share/${PROJECT_NAME})
 else()
-   set(datadir data)
+   set(datadir ${CMAKE_CURRENT_SOURCE_DIR}/data)
 endif()
 
 set(prefix      ${CMAKE_INSTALL_PREFIX})
@@ -49,7 +49,7 @@ target_link_libraries(${PROJECT_NAME} hiredis ${REDIS3M_BOOST_LIBS})
 set_target_properties(${PROJECT_NAME} PROPERTIES VERSION ${REDIS3M_VERSION_STRING}
                                            SOVERSION ${REDIS3M_VERSION_MAJOR})
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS_RELEASE "DATADIR=\"${datadir}\"")
-set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS_DEBUG "DATADIR=\"${CMAKE_SOURCE_DIR}/data\"")
+set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_DEFINITIONS_DEBUG "DATADIR=\"${CMAKE_CURRENT_SOURCE_DIR}/data\"")
 
 # Static version
 add_library(${PROJECT_NAME}-static STATIC ${SRC_FILES} ${CMAKE_CURRENT_BINARY_DIR}/datadir.cpp ${INCLUDE_FILES})
